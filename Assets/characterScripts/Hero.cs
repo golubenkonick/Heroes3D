@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
+
+   
     public int Attack { get; set; }
     public int Defense { get; set; }
     public int Power { get; set; }
@@ -35,4 +37,8 @@ public class Hero : MonoBehaviour
     Artifact[] Backpack { get; set; } = new Artifact[64]; // unused artifacts
 
 
+    void OnSave()
+    {
+        Debug.Log("Hello");
+    }
 }
