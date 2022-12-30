@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -227,8 +227,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1117551874}
   - component: {fileID: 1117551873}
-  - component: {fileID: 1117551872}
   - component: {fileID: 1117551875}
+  - component: {fileID: 1117551872}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11486746a89e32f47b7c83047a0a73bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Handler: {fileID: 2060799453}
+  Handler: {fileID: 2044078453}
 --- !u!1 &2044078447
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,8 +327,8 @@ GameObject:
   - component: {fileID: 2044078451}
   - component: {fileID: 2044078450}
   - component: {fileID: 2044078449}
-  - component: {fileID: 2044078448}
   - component: {fileID: 2044078453}
+  - component: {fileID: 2044078448}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -452,8 +452,8 @@ GameObject:
   - component: {fileID: 2060799456}
   - component: {fileID: 2060799455}
   - component: {fileID: 2060799454}
-  - component: {fileID: 2060799453}
   - component: {fileID: 2060799452}
+  - component: {fileID: 2060799453}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Untagged
@@ -558,7 +558,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2060799451}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.01, y: 0.2542379, z: -1.5291715}
+  m_LocalPosition: {x: -0.59, y: 0.2542379, z: -2.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

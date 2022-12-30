@@ -37,8 +37,8 @@ public class Hero : MonoBehaviour
     Artifact[] Backpack { get; set; } = new Artifact[64]; // unused artifacts
 
 
-    void OnSave()
+    public void OnSave()
     {
-        Debug.Log("Hello");
+        Debug.Log("OnSave in class Hero");
     }
 }
