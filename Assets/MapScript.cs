@@ -24,6 +24,13 @@ public class MapScript : MonoBehaviour
             }
         }
     }
+    public float Distance(Vector2 cell1, Vector2 cell2)
+    {
+        float dx = Mathf.Abs(cell1.x - cell2.x);
+        float dy = Mathf.Abs(cell1.y - cell2.y);
+        float min = Mathf.Min(dx, dy); 
+        return min*Mathf.Sqrt(2) + Mathf.Abs(dx-dy);
+    }
 
     // Update is called once per frame
     void Update()
