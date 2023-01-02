@@ -8,13 +8,13 @@ public class HandlerCaller : MonoBehaviour
     
     public void Start()
     {
-        //Map map = Handler.GetComponent<Map>();
-        //map.OnSave(); // work if OnSave is public
+        Map map = Handler.GetComponent<Map>();
+        map.OnSave(); // work if OnSave is public
         //Hero hero = Handler.GetComponent<Hero>();
         //hero.OnSave(); // work if OnSave is public
 
-        Handler.Invoke("OnSave", 0.0f); // work if OnSave is private. Invoke only one 
-        // Handler.SendMessage("OnSave"); // work if OnSave is private. Invoke all methods "OnSave"
+        //Handler.Invoke("OnSave", 0.0f); // work if OnSave is private. Invoke only one 
+        //Handler.SendMessage("OnSave"); // work if OnSave is private. Invoke all methods "OnSave"
     }
 
 
