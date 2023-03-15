@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Roy_T.AStar.Grids;
-using Roy_T.AStar.Primitives;
-using Roy_T.AStar.Paths;
+
 using UnityEngine;
 using UnityEngine.UI;
-using Roy_T.AStar.Graphs;
+
+using System.Linq;
+using Aoiti.Pathfinding;
 
 public class HexGrid : MonoBehaviour
 {
@@ -13,18 +13,30 @@ public class HexGrid : MonoBehaviour
 	public int height = 6;
 
 	public HexCell cellPrefab;
-    HexCell[] cells;
+    public HexCell[] cells;
 
 	public Text cellLabelPrefab;
 
 	Canvas gridCanvas;
 	HexMesh hexMesh;
 
-	HashSet<Node> nodes;
+
+    
+    public static HexGrid Instance {get; private set;}
+
+     //List<Roy_T.AStar.Graphs.Node> nodes;
 
 	private void Awake()
     {
-		gridCanvas = GetComponentInChildren<Canvas>();
+        if (Instance != null)
+        {
+            DestroyImmediate(gameObject);
+            return;
+        }
+        Instance = this;
+
+
+        gridCanvas = GetComponentInChildren<Canvas>();
 		hexMesh = GetComponentInChildren<HexMesh>();
 
 		cells = new HexCell[height * width];
@@ -33,50 +45,77 @@ public class HexGrid : MonoBehaviour
 			for (int x = 0; x < width; x++)
 			{
 				CreateCell(x, z, i++);
-				//var nodeF = new Node(new Position(x, z));
-				nodes.Add(new Node(new Position(x,z)));
+				
 			}
 		}
-		var speedLimit = Velocity.FromMetersPerSecond(5000);
-		foreach (Node node in nodes)
+
+
+        
+      
+
+        foreach (HexCell cell in cells)
         {
-			// [1, 0], [-1, 0], [0, 1], // TODO Hometask tuple [1, 0]
-			Node nodeEast = new Node(new Position(node.Position.X+1, node.Position.Y));	
-			if (nodes.TryGetValue(node, out var nodeEastFound))
+            // [1, 0], [-1, 0], [0, 1], // TODO Hometask tuple [1, 0]
+            (int X, int Z)[] coords = { (1, 0), (-1, 0), (0, 1), (0, -1), (-1, 1), (1, -1) };
+
+            foreach (var coord in coords)
             {
-				node.Connect(nodeEastFound, speedLimit);
-			}
-			Node nodeWest = new Node(new Position(node.Position.X - 1, node.Position.Y));
-			if (nodes.TryGetValue(node, out var nodeWestFound))
-			{
-				node.Connect(nodeWestFound, speedLimit);
-			}
-			Node nodeNorthEast = new Node(new Position(node.Position.X, node.Position.Y+1));
-			if (nodes.TryGetValue(node, out var nodeNorthEastFound))
-			{
-				node.Connect(nodeNorthEastFound, speedLimit);
-			}
-			Node nodeSouthWest = new Node(new Position(node.Position.X, node.Position.Y-1));
-			if (nodes.TryGetValue(node, out var nodeSouthWestFound))
-			{
-				node.Connect(nodeSouthWestFound, speedLimit);
-			}
-			Node nodeNorthWest = new Node(new Position(node.Position.X - 1, node.Position.Y + 1));
-			if (nodes.TryGetValue(node, out var nodeNorthWestFound))
-			{
-				node.Connect(nodeNorthWestFound, speedLimit);
-			}
-			Node nodeSouthEast = new Node(new Position(node.Position.X + 1, node.Position.Y -1));
-			if (nodes.TryGetValue(node, out var nodeSouthEastFound))
-			{
-				node.Connect(nodeSouthEastFound, speedLimit);
-			}
+                HexCell neighborCell = cells.FirstOrDefault(c => 
+                    c.coordinates.X == cell.coordinates.X + coord.X 
+                    && c.coordinates.Z == cell.coordinates.Z + coord.Z);
+               
+                if (neighborCell != null)
+                {
+                    cell.neighbours.Add(neighborCell, 1);
+                    // neighbor.Connect(cell);
+                }
 
 
-		}
+            }
+                    
+            #region add edges
+            //Node nodeEast = new Node(new Position(node.Position.X+1, node.Position.Y));	
+            //if (nodes.TryGetValue(node, out var nodeEastFound))
+            //         {
+            //	node.Connect(nodeEastFound, speedLimit);
+            //}
+            //Node nodeWest = new Node(new Position(node.Position.X - 1, node.Position.Y));
+            //if (nodes.TryGetValue(node, out var nodeWestFound))
+            //{
+            //	node.Connect(nodeWestFound, speedLimit);
+            //}
+            //Node nodeNorthEast = new Node(new Position(node.Position.X, node.Position.Y+1));
+            //if (nodes.TryGetValue(node, out var nodeNorthEastFound))
+            //{
+            //	node.Connect(nodeNorthEastFound, speedLimit);
+            //}
+            //Node nodeSouthWest = new Node(new Position(node.Position.X, node.Position.Y-1));
+            //if (nodes.TryGetValue(node, out var nodeSouthWestFound))
+            //{
+            //	node.Connect(nodeSouthWestFound, speedLimit);
+            //}
+            //Node nodeNorthWest = new Node(new Position(node.Position.X - 1, node.Position.Y + 1));
+            //if (nodes.TryGetValue(node, out var nodeNorthWestFound))
+            //{
+            //	node.Connect(nodeNorthWestFound, speedLimit);
+            //}
+            //Node nodeSouthEast = new Node(new Position(node.Position.X + 1, node.Position.Y -1));
+            //if (nodes.TryGetValue(node, out var nodeSouthEastFound))
+            //{
+            //	node.Connect(nodeSouthEastFound, speedLimit);
+            //}
+            #endregion
 
-	}
-	void CreateCell(int x, int z, int i)
+        }
+
+
+    }
+    Dictionary<HexCell, float> ConnectedNodesAndStepCosts(HexCell centerPoint)
+    {
+        return centerPoint.neighbours;
+    }
+
+    void CreateCell(int x, int z, int i)
 	{
 		Vector3 position;
 		position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
@@ -98,16 +137,62 @@ public class HexGrid : MonoBehaviour
 	}
 
 
-	//public static HexCoordinates FromOffsetCoordinates(int x, int z)
-	//{
-	//	//return new HexCoordinates(x - z / 2, z);
-	//	return new HexCoordinates(x,z);
-	//}
+    //public static HexCoordinates FromOffsetCoordinates(int x, int z)
+    //{
+    //	//return new HexCoordinates(x - z / 2, z);
+    //	return new HexCoordinates(x,z);
+    //}
 
-	void Start()
+
+
+   
+
+    public float HeuristicDistance(HexCell pointA, HexCell pointB)
+    {
+        return Mathf.Max(
+            Mathf.Abs(pointB.coordinates.Z - pointA.coordinates.Z),
+            Mathf.Abs(pointB.coordinates.X - pointA.coordinates.X),
+            Mathf.Abs(pointB.coordinates.Y - pointA.coordinates.Y)
+        );
+    }
+
+    void Start()
 	{
+
 		hexMesh.Triangulate(cells);
 
-	}
-	
+
+        #region Roy_T
+        //var pathFinder = new PathFinder();
+        //var maxAgentSpeed = Velocity.FromKilometersPerHour(140);
+
+
+        //Node nodeA = nodes.FirstOrDefault(n => n.Position.Equals(new Position(0, 0)));
+        //Node nodeB = nodes.FirstOrDefault(n => n.Position.Equals(new Position(5, 0)));
+
+
+        //var path = pathFinder.FindPath(nodeA, nodeB, maxAgentSpeed);
+        //Debug.Log($"type: {path.Type}, distance: {path.Distance}, duration {path.Duration}");
+
+        //Debug.Log(string.Join("\n", path.Edges));
+        #endregion
+
+
+        HexCell a = cells[0]; 
+        HexCell b = cells[cells.Length - 1]; // in python cells[-1];
+        Debug.Log("point a = " + a);
+        Debug.Log("point b = " + b);
+        Debug.Log("distance a->b = " + HeuristicDistance(a,b));
+
+
+
+        Pathfinder<HexCell> mypathfinder = new Pathfinder<HexCell>(HeuristicDistance, ConnectedNodesAndStepCosts, 200); 
+        //Call only once …
+        List<HexCell> path; 
+        mypathfinder.GenerateAstarPath( b, a, out path); //A and B are instances of T
+
+        Debug.Log(string.Join(" - ",path));
+
+    }
+
 }
