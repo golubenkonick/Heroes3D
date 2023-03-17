@@ -110,7 +110,7 @@ public class HexGrid : MonoBehaviour
 
 
     }
-    Dictionary<HexCell, float> ConnectedNodesAndStepCosts(HexCell centerPoint)
+    public Dictionary<HexCell, float> ConnectedNodesAndStepCosts(HexCell centerPoint)
     {
         return centerPoint.neighbours;
     }
@@ -144,8 +144,15 @@ public class HexGrid : MonoBehaviour
     //}
 
 
+    public static  float HeuristicDistance2(HexCell pointA, HexCell pointB)
+    {
+        return Mathf.Max(
+            Mathf.Abs(pointB.coordinates.Z - pointA.coordinates.Z),
+            Mathf.Abs(pointB.coordinates.X - pointA.coordinates.X),
+            Mathf.Abs(pointB.coordinates.Y - pointA.coordinates.Y)
+        );
+    }
 
-   
 
     public float HeuristicDistance(HexCell pointA, HexCell pointB)
     {
@@ -161,37 +168,20 @@ public class HexGrid : MonoBehaviour
 
 		hexMesh.Triangulate(cells);
 
-
-        #region Roy_T
-        //var pathFinder = new PathFinder();
-        //var maxAgentSpeed = Velocity.FromKilometersPerHour(140);
-
-
-        //Node nodeA = nodes.FirstOrDefault(n => n.Position.Equals(new Position(0, 0)));
-        //Node nodeB = nodes.FirstOrDefault(n => n.Position.Equals(new Position(5, 0)));
-
-
-        //var path = pathFinder.FindPath(nodeA, nodeB, maxAgentSpeed);
-        //Debug.Log($"type: {path.Type}, distance: {path.Distance}, duration {path.Duration}");
-
-        //Debug.Log(string.Join("\n", path.Edges));
-        #endregion
-
-
-        HexCell a = cells[0]; 
-        HexCell b = cells[cells.Length - 1]; // in python cells[-1];
-        Debug.Log("point a = " + a);
-        Debug.Log("point b = " + b);
-        Debug.Log("distance a->b = " + HeuristicDistance(a,b));
+        //HexCell a = cells[0]; 
+        //HexCell b = cells[cells.Length - 1]; // in python cells[-1];
+        //Debug.Log("point a = " + a);
+        //Debug.Log("point b = " + b);
+        //Debug.Log("distance a->b = " + HeuristicDistance(a,b));
 
 
 
-        Pathfinder<HexCell> mypathfinder = new Pathfinder<HexCell>(HeuristicDistance, ConnectedNodesAndStepCosts, 200); 
-        //Call only once …
-        List<HexCell> path; 
-        mypathfinder.GenerateAstarPath( b, a, out path); //A and B are instances of T
+        //Pathfinder<HexCell> mypathfinder = new Pathfinder<HexCell>(HeuristicDistance, ConnectedNodesAndStepCosts, 200); 
+        ////Call only once …
+        //List<HexCell> path; 
+        //mypathfinder.GenerateAstarPath( b, a, out path); //A and B are instances of T
 
-        Debug.Log(string.Join(" - ",path));
+        //Debug.Log(string.Join(" - ",path));
 
     }
 
